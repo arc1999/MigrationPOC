@@ -12,38 +12,37 @@ import (
 )
 
 type ICDDao struct {
-
 }
-func (d ICDDao)Paginate(startid int64,nperpage int64)  ([]model.ICDMongo, int64,error) {
 
-	filter := bson.M{"id": bson.M{"$gt": startid}}
+func (d ICDDao) Paginate(pagenumber int64, nperpage int64) ([]model.ICDMongo, error) {
+
 	options := options.Find()
 	options.SetLimit(nperpage)
+	options.SetSort(bson.M{})
+	options.SetSkip(pagenumber)
+
 	db := db.GetMongoDB()
-	cur, err := db.Collection(os.Getenv("DATA_MONGODB_DATABASE")).Find(context.TODO(), filter, options)
+	cur, err := db.Collection(os.Getenv("DATA_MONGODB_DATABASE")).Find(context.TODO(), bson.M{}, options)
 	if err != nil {
-		return nil,0, err
+		return nil, err
 	}
 	defer cur.Close(context.TODO())
 	var jobs []model.ICDMongo
-	var id int64
 	for cur.Next(context.TODO()) {
 		var job model.ICDMongo
-
 		err := cur.Decode(&job)
 		if err != nil {
-			return nil,0, err
+			return nil, err
 		}
-		id = job.ID
 		jobs = append(jobs, job)
 	}
-	return jobs,id, nil
+	return jobs, nil
 }
-func (d ICDDao) GetCount() (int64,error){
+func (d ICDDao) GetCount() (int64, error) {
 	db := db.GetMongoDB()
-	return db.Collection(os.Getenv("DATA_MONGODB_DATABASE")).CountDocuments(context.TODO(),bson.M{})
+	return db.Collection(os.Getenv("DATA_MONGODB_DATABASE")).CountDocuments(context.TODO(), bson.M{})
 }
-func (d ICDDao)  BulkInsert(Entity []model.ICD,nperpage int64)  error {
+func (d ICDDao) BulkInsert(Entity []model.ICD, nperpage int64) error {
 	sqldb := db.GetMysqlDB()
 	b := make([]interface{}, len(Entity))
 	for i := range Entity {

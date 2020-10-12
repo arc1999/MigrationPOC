@@ -36,7 +36,6 @@ func init() {
 	mysqldb.AutoMigrate(model.ICD{})
 	log.Println("My sql connection done")
 
-
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -55,8 +54,8 @@ func init() {
 func GetMysqlDB() *gorm.DB {
 	return mysqldb
 }
+
 //GetDB - return Db instance
 func GetMongoDB() *mongo.Database {
 	return mongodb
 }
-
