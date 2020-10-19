@@ -1,6 +1,8 @@
 package transformer
 
-import "MigrationPOC/model"
+import (
+	"MigrationPOC/model"
+)
 
 func Transform(micds []model.ICDMongo) []model.ICD {
 	var icds []model.ICD
@@ -16,9 +18,11 @@ func Transform(micds []model.ICDMongo) []model.ICD {
 		icd.IcdCode = micd.IcdCode
 		var ct string
 		for _, terms := range micd.CommonTerms {
-			ct = ct + terms + ","
+			ct = ct + terms	+","
 		}
-		ct = ct[:len(ct)-1]
+		if len(ct)>0{
+			ct = ct[:len(ct) - 1]
+		}
 		icd.CommonTerms = ct
 		icds = append(icds, icd)
 	}

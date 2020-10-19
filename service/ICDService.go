@@ -23,18 +23,31 @@ func (is ICDService) Migrate() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	log.Println(totaldoc)
 	var i int64
-	for i*nperpage < totaldoc {
+	i=1
+	var noofpages = totaldoc/nperpage
+	log.Println(noofpages)
+	for i < noofpages {
 		micds, err := d.Paginate(i, nperpage)
 		if err != nil {
 			log.Fatal(err)
 		}
 		icds := transformer.Transform(micds)
+
 		err = d.BulkInsert(icds, nperpage)
 		if err != nil {
 			log.Fatal(err)
 		}
 		i++
+	}
+	micds, err := d.Paginate(i, totaldoc - (nperpage*(i-1)))
+	if err != nil {
+		log.Fatal(err)
+	}
+	icds := transformer.Transform(micds)
+	err = d.BulkInsert(icds, nperpage)
+	if err != nil {
+		log.Fatal(err)
 	}
 }

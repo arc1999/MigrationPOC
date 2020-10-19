@@ -1,6 +1,8 @@
 package main
 
-import "MigrationPOC/service"
+import (
+	"MigrationPOC/service"
+)
 
 var s service.ICDService
 
