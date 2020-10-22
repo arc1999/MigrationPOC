@@ -25,11 +25,11 @@ func (is ICDService) Migrate() {
 	}
 	log.Println(totaldoc)
 	var i int64
-	i=1
+	i=0
 	var noofpages = totaldoc/nperpage
 	log.Println(noofpages)
 	for i < noofpages {
-		micds, err := d.Paginate(i, nperpage)
+		micds, err := d.Paginate(i*nperpage, nperpage)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -41,7 +41,7 @@ func (is ICDService) Migrate() {
 		}
 		i++
 	}
-	micds, err := d.Paginate(i, totaldoc - (nperpage*(i-1)))
+	micds, err := d.Paginate(i*nperpage, totaldoc - (nperpage*(i)))
 	if err != nil {
 		log.Fatal(err)
 	}

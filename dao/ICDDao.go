@@ -22,7 +22,7 @@ func (d ICDDao) Paginate(pagenumber int64, nperpage int64) ([]model.ICDMongo, er
 	options.SetSkip(pagenumber)
 
 	db := db.GetMongoDB()
-	cur, err := db.Collection(os.Getenv("DATA_MONGODB_DATABASE")).Find(context.TODO(), bson.M{}, options)
+	cur, err := db.Collection(os.Getenv("DATA_MONGODB_COLLECTION")).Find(context.TODO(), bson.M{}, options)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (d ICDDao) Paginate(pagenumber int64, nperpage int64) ([]model.ICDMongo, er
 }
 func (d ICDDao) GetCount() (int64, error) {
 	db := db.GetMongoDB()
-	return db.Collection(os.Getenv("DATA_MONGODB_DATABASE")).CountDocuments(context.TODO(), bson.M{})
+	return db.Collection(os.Getenv("DATA_MONGODB_COLLECTION")).CountDocuments(context.TODO(),bson.D{})
 }
 func (d ICDDao) BulkInsert(Entity []model.ICD, nperpage int64) error {
 	sqldb := db.GetMysqlDB()
